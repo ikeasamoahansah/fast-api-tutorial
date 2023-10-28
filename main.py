@@ -48,7 +48,7 @@ def create_note_for_user(
     return crud.create_user_note(db=db, note=note, user_id=user_id)
 
 
-@app.get('/notes/', response_model=schemas.Note)
+@app.get('/notes/', response_model=list[schemas.Note])
 def read_notes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     notes = crud.get_notes(db=db, skip=skip, limit=limit)
     return notes
