@@ -61,3 +61,15 @@ def read_note(note_id: int, db: Session = Depends(get_db)):
     if db_note is None:
         raise HTTPException(status_code=404, detail="Note not found")
     return db_note
+
+
+@app.post("/login/")
+async def login_user(email: str, password: str):
+    db = SessionLocal()
+    user = db.query(models.User).filter(models.User.email == email).first()
+    db.close()
+    if not user:
+        return {"message": "Invalid email"}
+    if not crud.verify_password(password, user.hashed_password):
+        return {"message": "Invalid password"}
+    return {"message": "Logged in successfully"}
